@@ -1,0 +1,325 @@
+<link rel="stylesheet" type="text/css" href="/static/css/search.css?v=<?=$version?>">
+<script src="/static/bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+
+<div class="search-box row">
+	<div class="col-xs-8">
+		<div class="btn-group pull-left" role="group" aria-label="...">
+			<button type="button" class="btn btn-default" id="add" data-toggle="modal" data-target="#addModal"><span class="glyphicon glyphicon-plus-sign"></span> 新增任务</button>
+			<button type="button" class="btn btn-danger" id="refresh"><span class="glyphicon glyphicon-refresh"></span> 更新任务</button>
+		</div>
+	</div>
+    <div class="col-xs-4">
+	<form class="form-horizontal" method="post" id="_CustomizedQueryForm" role="form" action="javascript:void(0);">
+		
+			<div class="col-lg-12 pull-right">
+			    <div class="input-group input-sm">
+			      <input type="text" class="form-control input-sm" id="title" name="title|like" placeholder="任务名称">
+			      <span class="input-group-btn">
+			        <button class="btn btn-default input-sm" type="button" id="_CustomizedQueryFormSubmit"><span class="glyphicon glyphicon-search"></span>搜索</button>
+		            <button type="button" class="btn btn-default input-sm" id="show_advance_search" tabindex="-1" aria-expanded="false"><span id="span-icon" class="glyphicon glyphicon-zoom-in"></span></button>
+			      </span>
+			    </div><!-- /input-group -->
+			</div><!-- /.col-lg-6 -->
+		</div>
+		<div class="col-sm-12 pull-right" id="advance_search" style="border: 1px dotted #ddd;margin:5px 20px; padding-top:10px;padding-bottom:10px;width:96%;display: none;">
+             <div class="col-xs-4 search_input">
+                <label for="title" class="col-xs-4 control-label search_text"><small>渠道名称</small></label>
+                <div class="col-xs-8 search_myinput">
+                     <select class="form-control input-sm" id="status" name="style|=">
+	                    <option value="-9">全部</option>
+                            <?php foreach($type as $kk=>$f): ?>
+                                <option value="<?=$kk?>"><?=$f?></option>
+                            <?php endforeach; ?>
+	                </select>
+                 </div>
+             </div>
+		</div>
+	</form>
+    </div>
+</div>
+<!-- 新增开始-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">新增任务</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="form_add">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="title">任务名称</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" required="" placeholder="" id="title" name="title"/>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-3 control-label" for="type">任务类型</label>
+                        <div class="col-sm-6">
+						    <select class="form-control" name="type">
+				                <option value="1">定时任务</option>
+				                <option value="2">常驻任务</option>
+							</select>
+                        </div>
+                        <div class="col-sm-3">
+						   <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-3 control-label" for="style">分类名称</label>
+                        <div class="col-sm-6">
+						    <select class="form-control" name="style">
+				                <?php foreach($style as $kk=>$f): ?>
+                                    <option value="<?=$kk?>"><?=$f?></option>
+                                <?php endforeach; ?>
+							</select>
+                        </div>
+                        <div class="col-sm-3">
+						   <font color="red">*</font>
+                        </div>
+                    </div>
+
+                     <div class="form-group" >
+                        <label class="col-sm-3 control-label" for="style">资源类型</label>
+                        <div class="col-sm-6">
+
+                            <?php foreach($resource as $k=>$r): ?>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="resource_<?=$r['id']?>" value="<?=$r['id']?>"> <?=$r['resource_name']?>
+                                </label>
+                            <?php endforeach; ?>
+                           
+                        </div>
+                        <div class="col-sm-3">
+                           <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="process_tag">
+                        <label class="col-sm-3 control-label" for="process_tag">任务标志</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" required="" placeholder="判断进程是否存在使用" name="process_tag" />
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="timed">
+                        <label class="col-sm-3 control-label" for="timed">时间设置</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="* * * * * " name="timed" required />
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+					
+					<div class="form-group">
+                        <label class="col-sm-3 control-label" for="command">命令设置</label>
+                        <div class="col-sm-6">
+						   <textarea class="form-control" name="command" rows="4" required></textarea>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="detail">备注</label>
+                        <div class="col-sm-6">
+							<textarea class="form-control" name="detail" rows="4" required></textarea>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary" id="submit_add_button">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 新增结束 -->
+
+<!-- 编辑开始 -->
+<!-- 修改 start -->
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">修改任务</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="form_edit">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="title">任务名称</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" required="" placeholder="" id="title" name="title"/>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-3 control-label" for="type">任务类型</label>
+                        <div class="col-sm-6">
+						    <select class="form-control" name="type">
+				                <option value="1">定时任务</option>
+				                <option value="2">常驻任务</option>
+							</select>
+                        </div>
+                        <div class="col-sm-3">
+						   <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-3 control-label" for="style">分类名称</label>
+                        <div class="col-sm-6">
+						    <select class="form-control" name="style">
+				                <?php foreach($style as $kk=>$f): ?>
+                                    <option value="<?=$kk?>"><?=$f?></option>
+                                <?php endforeach; ?>
+							</select>
+                        </div>
+                        <div class="col-sm-3">
+						   <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" >
+                        <label class="col-sm-3 control-label" for="style">资源类型</label>
+                        <div class="col-sm-6">
+
+                            <?php foreach($resource as $k=>$r): ?>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="resource_<?=$r['id']?>" value="<?=$r['id']?>"> <?=$r['resource_name']?>
+                                </label>
+                            <?php endforeach; ?>
+                           
+                        </div>
+                        <div class="col-sm-3">
+                           <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="process_tag">
+                        <label class="col-sm-3 control-label" for="process_tag">任务标志</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" required="" placeholder="判断进程是否存在使用" name="process_tag" />
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="timed">
+                        <label class="col-sm-3 control-label" for="timed">时间设置</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="* * * * * " name="timed" required />
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+					
+					<div class="form-group">
+                        <label class="col-sm-3 control-label" for="command">命令设置</label>
+                        <div class="col-sm-6">
+						   <textarea class="form-control" name="command" rows="4" required></textarea>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="detail">备注</label>
+                        <div class="col-sm-6">
+							<textarea class="form-control" name="detail" rows="4" required></textarea>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="id" value="0">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary" id="submit_edit_button">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary btn-lg" id='edit' style="display: none" data-toggle="modal" data-target="#editModal">触发模态框</button>
+<!-- 修改 end -->
+<!-- 编辑结束 -->
+
+<script type="text/javascript">
+	$('#submit_add_button').on('click',function(){
+		var data = $('form[name=form_add]').serialize();
+		ajaxRequest({'data':data},'save_cron','submit_add_button','POST',2);
+	});
+
+	$('#submit_edit_button').on('click',function(){
+		var data = $('form[name=form_edit]').serialize();
+		ajaxRequest({'data':data},'save_cron','submit_edit_button','POST',2);
+	});
+
+	//编辑商品
+	function edit_data_to_form(id)
+	{
+		$.ajax({
+            type: "POST",
+            url: "get_detail",
+            data: {id:id},
+            dataType: 'json',
+            success: function(data) {
+            	var fields = ['id','title','resource_id','type','style','process_tag','timed','command','detail'];
+            	$.each(fields,function(k,v){
+            		if(v=='type' || v=='style')
+            		{
+            			$('form[name=form_edit]').find('select[name='+v+']').val(data['data'][0][v]);
+            		}else if(v=='command' || v=='detail')
+            		{
+            			$('form[name=form_edit]').find('textarea[name='+v+']').val(data['data'][0][v]);
+            		}else if(v=='resource_id')
+                    {
+                        var resource = data['data'][0][v].split(',');
+                        for (var i = 1; i <= resource.length ; i++) {
+                            $('form[name=form_edit]').find('input[name=resource_'+i+']').attr('checked','checked');
+                        }
+
+                    }else
+            		{
+            			$('form[name=form_edit]').find('input[name='+v+']').val(data['data'][0][v]);
+            		}
+            	});
+            }
+        });  
+	}
+
+	//更新任务
+	$('#refresh').on('click',function(){
+		var data = 1;
+		ajaxRequest({'data':data},'refresh','refresh','POST',1);
+	});
+
+</script>
+
+
+
+

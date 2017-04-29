@@ -1,0 +1,225 @@
+<link rel="stylesheet" type="text/css" href="/static/css/search.css?v=<?=$version?>">
+<link rel="stylesheet" type="text/css" href="/static/silviomoreto/bootstrap-select.css" />
+<div class="search-box row">
+	<div class="col-xs-8">
+		<div class="btn-group pull-left" role="group" aria-label="...">
+			<button type="button" class="btn btn-default" id="adapter"><span class="glyphicon glyphicon-plus-sign "></span> 新增</button>
+			<button type="button" class="btn btn-default" id="download"><span class="glyphicon glyphicon-save"></span> 下载执行器</button>
+		</div>
+	</div>
+    <div class="col-xs-4">
+	<form class="form-horizontal" method="post" id="_CustomizedQueryForm" role="form" action="javascript:void(0);">
+		
+			<div class="col-lg-12 pull-right">
+			    <div class="input-group input-sm">
+			      <input type="text" class="form-control input-sm" id="resource_name" name="resource_name|like" placeholder="请输入资源名称">
+			      <span class="input-group-btn">
+			        <button class="btn btn-default input-sm" type="button" id="_CustomizedQueryFormSubmit"><span class="glyphicon glyphicon-search"></span>搜索</button>
+			      </span>
+			    </div><!-- /input-group -->
+			</div><!-- /.col-lg-6 -->
+		</div>
+		<div class="col-sm-12 pull-right" id="advance_search" style="border: 1px dotted #ddd;margin:5px 20px; padding-top:10px;padding-bottom:10px;width:96%;display: none;">
+        </div>
+	</form>
+    </div>
+</div>
+
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">新增资源</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="form_add">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="">资源名称</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="" id="resource_name" name="resource_name" require/>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="">资源标志</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="" id="resource_tag" name="resource_tag" require/>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="">IP地址</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="" id="ip" name="ip"/>
+                        </div>
+                        <div class="col-sm-3">
+						    
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="add_submit_button">提交</button>
+               
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">编辑资源</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" name="form_edit">
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="">资源名称</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="" id="resource_name" name="resource_name"/>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="">资源标志</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="" id="resource_tag" name="resource_tag"/>
+                        </div>
+                        <div class="col-sm-3">
+						    <font color="red">*</font>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label" for="">IP地址</label>
+                        <div class="col-sm-6">
+						   <input type="text"  class="form-control input-sm" placeholder="" id="ip" name="ip"/>
+                        </div>
+                        <div class="col-sm-3">
+						    
+                        </div>
+                    </div>
+                    <input type="hidden" name="id" id='id' value="">
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="edit_submit_button">保存</button>
+               
+            </div>
+        </div>
+    </div>
+</div>
+<button class="btn btn-primary btn-lg" id='add' style="display: none"  data-toggle="modal" data-target="#addModal"></button>
+<button class="btn btn-primary btn-lg" id='edit' style="display: none" data-toggle="modal" data-target="#editModal">触发模态框</button>
+<script src="/static/bootstrap-3.3.5-dist/js/bootstrap.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="/static/silviomoreto/bootstrap-select.js"></script>
+<script type="text/javascript">
+	//弹出框
+	$("#adapter").on('click',function(){
+		$("#add").click();
+	});
+
+	//保存
+    $('#add_submit_button').on('click',function() {
+        var form_data = $('form[name=form_add]').serialize();
+        
+        $.ajax({
+            type: 'POST',
+            url: "/task/resource/save_resource" ,
+            data: {
+                form_data:form_data
+            } ,
+            dataType: 'json',
+            success: function(data){
+                if(data.status==200){
+                    alert(data.message);
+                    window.location.reload();
+                }else{
+                    alert(data.message);
+                    return;
+                }
+            },
+        });
+	});
+
+	//编辑品类
+	function edit_data_to_form(id)
+	{
+		$.ajax({
+            type: "POST",
+            url: "get_detail",
+            data: {id:id},
+            dataType: 'json',
+            success: function(data) {
+            	var fields = ['id','resource_name','resource_tag','ip'];
+            	$.each(fields,function(k,v){
+            		$('form[name=form_edit]').find('#'+v).val(data['data'][0][v]);
+            	});
+            }
+        });  
+	}
+
+	$('#add_submit_button').on('click',function() {
+        var form_data = $('form[name=form_add]').serialize();
+        
+        $.ajax({
+            type: 'POST',
+            url: "/task/resource/save_resource" ,
+            data: {
+                form_data:form_data
+            } ,
+            dataType: 'json',
+            success: function(data){
+                if(data.status==200){
+                    alert(data.message);
+                    window.location.reload();
+                }else{
+                    alert(data.message);
+                    return;
+                }
+            },
+        });
+	});
+    
+    //编辑保存
+	$('#edit_submit_button').on('click',function() {
+		var form_data = $('form[name=form_edit]').serialize();
+		$.ajax({
+            type: 'POST',
+            url: "/task/resource/save_resource" ,
+            data: {
+                form_data:form_data
+            } ,
+            dataType: 'json',
+            success: function(data){
+                if(data.status==200){
+                	alert(data.message);
+                	window.location.reload();
+                }else{
+                	alert(data.message);
+                	return;
+                }
+            },
+        });
+	});
+
+	$("#download").on('click',function(){
+		$url = "/public/download/index?model=task&type=download&name=cron.sh";
+		window.location.href=$url;
+	});
+
+</script>
